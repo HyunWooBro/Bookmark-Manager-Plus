@@ -1,0 +1,398 @@
+<!doctype html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="lib/alertify/themes/alertify.core.css">
+	<link rel="stylesheet" href="lib/alertify/themes/alertify.default.css">
+	<link rel="stylesheet" href="lib/toolbar/themes/jquery.toolbar.css">
+	<link rel="stylesheet" href="lib/picker/themes/classic.css">
+	<link rel="stylesheet" href="lib/picker/themes/classic.date.css">
+	<link rel="stylesheet" href="lib/picker/themes/classic.time.css">
+	<link rel="stylesheet" href="lib/selectableScroll/themes/jquery-ui-ext.css">
+	<link rel="stylesheet" href="css/switch.css">
+	<link rel="stylesheet" href="css/default.css">
+	<script src="lib/jquery/jquery-1.12.4.min.js"></script>
+	<script src="lib/jquery/jquery-ui.min.js"></script>
+	<script src="lib/alertify/alertify.js"></script>
+	<script src="lib/toolbar/toolbar.js"></script>
+	<script src="lib/picker/picker.js"></script>
+	<script src="lib/picker/picker.date.js"></script>
+	<script src="lib/picker/picker.time.js"></script>
+	<script src="lib/selectableScroll/selectableScroll.js"></script>
+	<script src="js/constant.js"></script>
+	<script src="js/strings.js"></script>
+	<script src="js/util.js"></script>
+	<script src="js/init.js"></script>
+	<script src="js/script.js"></script>
+</head>
+<body>
+	<div id="left-frame" class="frame">
+		<div id="header-panel">
+			<span id="view-icon"></span>
+			<span id="view-type"></span>
+			<a href="#" id="view-hide">
+			   <span class="fa fa-basic fa-hover fa-times"></span>
+			</a>
+		</div>
+		<div id="explore-panel">
+			<span class="explore-hierarchy"></span>
+			<span class="explore-arrow">
+				<a href="#" class="explore-backward" title="explore backward (use left key to move forward">
+					<span class="fa fa-hover fa-arrow-left" aria-hidden="true"></span>
+				</a>
+				<a href="#" class="explore-forward" title="explore forward (use right key to move forward">
+					<span class="fa fa-hover fa-arrow-right" aria-hidden="true"></span>
+				</a>
+			</span>
+			<div id="explore-sibling">
+				<ul></ul>
+			</div>
+			<div id="explore-history">
+				<ul></ul>
+			</div>
+		</div>
+		<div id="result-panel">
+			<ul id="result-list" class="list"></ul>
+		</div>
+		<div id="footer-panel">
+			<div>
+				<span class="search-info"></span>
+				<span class="search-info" title="select and search count"></span>
+			</div>
+		</div>
+	</div>
+	<div id="containment"></div>
+	<div id="separator"></div>
+	<div id="right-frame" class="frame">
+		<div id="header-panel">
+			<div id="action-menu-toolset">
+				<div id="icon-set">
+					<span class="advanced-search-icon-toolbars">
+						<div class="icon-toolbar">
+							<div id="icon-filter" class="fa fa-basic fa-filter option-icon" title="Search Filter"></div>
+						</div>
+						<div class="icon-toolbar">
+							<div id="icon-search-mode" class="fa fa-basic fa-question option-icon" title="Search Mode"></div>
+							<div id="icon-search-mode-content" class="hidden">
+								<a href="#" class="search-mode-normal" title="Normal Search">
+									<i class="fa fa-lg fa-circle-thin fa-search-normal option-icon"></i>
+								</a>
+								<a href="#" class="search-mode-wildcard" title="Wildcard Search ( '*', '?' )">
+									<i class="fa fa-lg fa-question-circle-o option-icon"></i>
+								</a>
+								<a href="#" class="search-mode-regex" title="Regular Expression Search">
+									<i class="fa fa-basic fa-registered option-icon"></i>
+								</a>
+							</div>
+						</div>
+					</span>
+					<span class="basic-icon-toolbars">
+						<div class="icon-toolbar">
+							<div id="icon-file" class="fa fa-basic fa-file option-icon" title="Page Visibility"></div>
+							<div id="icon-file-content" class="hidden">
+								<a href="#" class="file-none" title="Search no pages">
+								   <i class="fa fa-basic fa-file fa-file-none option-icon"></i>
+								</a>
+								<a href="#" class="file-display" title="Search pages">
+									<i class="fa fa-basic fa-file option-icon"></i>
+								</a>
+							</div>
+						</div>
+						<div class="icon-toolbar">
+							<div id="icon-folder-mode" class="fa fa-basic fa-folder option-icon" title="Folder Visibility"></div>
+							<div id="icon-folder-mode-content" class="hidden">
+								<a href="#" class="folder-mode-none" title="Search no folders"><i class="fa fa-basic fa-folder fa-folder-none option-icon"></i></a>
+								<a href="#" class="folder-mode-children" title="Search folders"><i class="fa fa-basic fa-folder option-icon"></i></a>
+								<a href="#" class="folder-mode-empty" title="Search folders with no children"><i class="fa fa-basic fa-folder-o option-icon"></i></a>
+							</div>
+						</div>
+						<div class="icon-toolbar">
+							<div id="icon-sort-mode" class="fa fa-basic fa-sort-alpha-asc option-icon" title="Sort Mode"></div>
+							<div id="icon-sort-mode-content" class="hidden">
+							   <a href="#" class="sort-mode-hierarchy" title="Sort by hierarchy"><i class="fa fa-basic fa-sort-amount-asc option-icon"></i></a>
+							   <a href="#" class="sort-mode-title" title="Sort by title"><i class="fa fa-basic fa-sort-alpha-asc fa-sort-title option-icon"></i></a>
+							   <a href="#" class="sort-mode-url" title="Sort by url"><i class="fa fa-basic fa-sort-alpha-asc fa-sort-url option-icon"></i></a>
+							   <a href="#" class="sort-mode-date" title="Sort by date"><i class="fa fa-basic fa-sort-numeric-asc option-icon"></i></a>
+							</div>
+						</div>
+						<div class="icon-toolbar">
+							<div id="icon-calendar" class="fa fa-basic fa-calendar option-icon" title="Search by date"></div>
+							<div id="icon-calendar-content" class="hidden">
+								<div>
+									<div id="icon-calendar-content-buttons">
+										<button title="today"><img src="img/calendar-day.svg" width="25"></button>
+										<button title="yesterday"><img src="img/calendar-yesterday.svg" width="25"></button>
+										<button title="past a week"><img src="img/calendar-week.svg" width="25">1W</button>
+										<button title="past a month"><img src="img/calendar-month.svg" width="25">1M</button>
+										<button title="past 3 months"><img src="img/calendar-year.svg" width="25">3M</button>
+										<button title="past a year"><img src="img/calendar-year.svg" width="25">1Y</button>
+										<button title="clear" class="fa fa-basic fa-remove"></button>
+									</div>
+									<hr>
+									<div id="icon-calendar-content-datepicker">
+										<span>
+											<input type="text" class="datepicker inpType" name="searchStartDate" id="searchStartDate">
+											<a href="#" class="dateclick">
+												<span class="fa fa-basic fa-hover fa-calendar" aria-hidden="true"></span>
+											</a>
+										</span>
+										<span class="demi">~</span>
+										<span>
+											<input type="text" class="datepicker inpType" name="searchEndDate" id="searchEndDate">
+											<a href="#" class="dateclick">
+												<span class="fa fa-basic fa-hover fa-calendar" aria-hidden="true"></span>
+											</a>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</span>
+				</div>
+				<a href="#" class="option">
+					<span class="fa fa-basic fa-hover fa-gear" aria-hidden="true"></span>
+				</a>
+			</div>
+			<div id="search-set">
+				<span>
+					<span id="search-icon" class="fa fa-basic fa-hover fa-search" aria-hidden="true"></span>
+					<input type="search" id="search-editor" placeholder="Search" title="editor for search (use up or down key to find recently used queries)">
+					
+					<a href="#" class="search-extend-trigger">
+						<span class="fa fa-hover fa-plus"></span>
+					</a>
+					<a href="#" class="search-history-trigger">
+						<span class="fa fa-basic fa-hover fa-chevron-down" aria-hidden="true"></span>
+					</a>
+				</span>
+				<div id="search-history">
+					<ul></ul>
+				</div>
+			</div>
+		</div>
+		<div id="explore-panel">
+			<span class="explore-hierarchy"></span>
+			<span class="explore-arrow">
+				<a href="#" class="explore-backward" title="explore backward (use left key to move forward">
+					<span class="fa fa-hover fa-arrow-left" aria-hidden="true"></span>
+				</a>
+				<a href="#" class="explore-forward" title="explore forward (use right key to move forward">
+					<span class="fa fa-hover fa-arrow-right" aria-hidden="true"></span>
+				</a>
+			</span>
+			<div id="explore-sibling">
+				<ul></ul>
+			</div>
+			<div id="explore-history">
+				<ul></ul>
+			</div>
+		</div>
+		<div id="result-panel">
+			<ul id="result-list" class="list"></ul>
+		</div>
+		<div id="footer-panel">
+			<div>
+				<span id="current-mode" title="current mode"></span>
+			</div>
+			<div>
+				<span class="search-info" title="filter count"></span>
+				<span class="search-info" title="select/total count">0/0</span>
+			</div>
+		</div>
+	</div>
+	<div id="modal-cover"></div>
+	<div id="option-menu" class="menu">
+		<ul>
+			<li id="append-view" class="menu-item">
+				<span class="fa fa-basic fa-plus-circle"></span>
+				<span>Append view</span>
+			</li>
+			<li id="remove-view" class="menu-item">
+				<span class="fa fa-basic fa-minus-circle"></span>
+				<span>Remove view</span>
+			</li>
+			<li id="show-advanced-search-options" class="menu-item">
+				<span class="fa fa-basic fa-search-plus"></span>
+				<span>Show Advanced Search Options</span>
+			</li>
+			<li id="hide-advanced-search-options" class="menu-item">
+				<span class="fa fa-basic fa-search-minus"></span>
+				<span>Hide Advanced Search Options</span>
+			</li>
+			<li id="reset-icon-toolbar-options" class="menu-item">
+				<span class="fa fa-basic fa-reply"></span>
+				<span>Reset Icon Toolbar Options</span>
+			</li>
+			<li id="bookmark-info" class="menu-item">
+				<span class="fa fa-basic fa-info-circle"></span>
+				<span>Bookmark info</span>
+			</li>
+			<li id="preference" class="menu-item">
+				<span class="fa fa-basic fa-wrench"></span>
+				<span>Preference</span>
+			</li>
+			<li id="about" class="menu-item">
+				<span class="fa fa-basic fa-question-circle"></span>
+				<span>About Bookmark Manager Plus</span>
+			</li>
+		</ul>
+	</div>
+	<div id="context-menu" class="menu">
+		<ul>
+			<li id="open-in-new-tab" class="menu-item">
+				<span class="fa fa-basic fa-globe"></span>
+				<span>Open in new tab</span>
+			</li>
+			<li id="open-in-new-window" class="menu-item">
+				<span class="fa fa-basic fa-globe"></span>
+				<span>Open in new window</span>
+			</li>
+			<li id="open-in-incognito-window" class="menu-item">
+				<span class="fa fa-basic fa-user-secret"></span>
+				<span>Open in incognito window</span>
+			</li>
+			<li id="open-all-in-new-tab" class="menu-item">
+				<span class="fa fa-basic fa-globe"></span>
+				<span>Open all in new tab</span>
+			</li>
+			<li id="open-all-in-new-window" class="menu-item">
+				<span class="fa fa-basic fa-globe"></span>
+				<span>Open all in new window</span>
+			</li>
+			<li id="open-all-in-incognito-window" class="menu-item">
+				<span class="fa fa-basic fa-user-secret"></span>
+				<span>Open all in incognito window</span>
+			</li>
+			<li id="copy" class="menu-item">
+				<span class="fa fa-basic fa-copy"></span>
+				<span>Copy</span>
+			</li>
+			<li id="cut" class="menu-item">
+				<span class="fa fa-basic fa-cut"></span>
+				<span>Cut</span>
+			</li>
+			<li id="paste" class="menu-item">
+				<span class="fa fa-basic fa-paste"></span>
+				<span>Paste</span>
+			</li>
+			<li id="show-in-folder" class="menu-item">
+				<span class="fa fa-basic fa-folder-open"></span>
+				<span>Show in folder</span>
+			</li>
+			<li id="edit" class="menu-item">
+				<span class="fa fa-basic fa-edit"></span>
+				<span>Edit</span>
+			</li>
+			<li id="delete" class="menu-item">
+				<span class="fa fa-basic fa-trash-o"></span>
+				<span>Delete</span>
+			</li>
+			<li id="add-folder" class="menu-item ">
+				<span class="fa fa-basic fa-folder"></span>
+				<span>Add folder</span>
+			</li>
+			<li id="add-page" class="menu-item">
+				<span class="fa fa-basic fa-file"></span>
+				<span>Add page</span>
+			</li>
+			<li id="expand-all-groups" class="menu-item">
+				<span class="fa fa-basic fa-expand"></span>
+				<span>Expand all groups</span>
+			</li>
+			<li id="collapse-all-groups" class="menu-item">
+				<span class="fa fa-basic fa-compress"></span>
+				<span>Collapse all groups</span>
+			</li>
+			<li id="folder-info" class="menu-item">
+				<span class="fa fa-basic fa-info-circle"></span>
+				<span>Folder info</span>
+			</li>
+		</ul>
+	</div>
+	<div id="result-item-editor" class="dialog">
+		<span id="editor-icon"></span>
+		<h3></h3>
+		<div class="editor-title">
+			<span>Title : </span> 
+			<input type="text">
+		</div>
+		<br>
+		<div class="editor-url">
+			<span>URL : </span>
+			<input type="text">
+		</div>
+		<div class="editor-button">
+			<span class="button-ok" aria-hidden="true">OK</span>
+			<span class="button-cancel" aria-hidden="true">Cancel</span>
+		</div>
+	</div>
+	<div id="info-window" class="window">
+		<span id="info-icon"></span>
+		<h3></h3>
+		<div id="info-title"></div>
+		<div id="info-folder-count">
+			<span></span>
+			<span></span>
+		</div>
+		<div id="info-page-count">				
+			<span></span>
+			<span></span>
+		</div>
+		<div id="info-folder-date1">
+			<span></span>
+			<span></span>
+		</div>
+		<div id="info-folder-date2">
+			<span></span>
+			<span></span>
+		</div>
+		<div class="info-button">
+			<span class="button-ok button-cancel" aria-hidden="true">OK</span>
+		</div>
+	</div>
+	<div id="about-window" class="window">
+		<span id="about-icon"></span>
+		<h3></h3>
+		<div id="about-title"></div>
+		<div id="about-developer">
+			<span>Developer</span>
+			<span></span>
+		</div>
+		<div id="about-version">
+			<span>Version</span>
+			<span></span>
+		</div>
+		<div id="about-patch-history">
+			<span>Patch History</span>
+			<span></span>
+		</div>
+		<div id="about-todo-list">
+			<span>Todo List</span>
+			<span></span>
+		</div>
+		<div id="about-shortcut-list">
+			<span>Shortcut List</span>
+			<span></span>
+		</div>
+		<div id="about-contributors">
+			<span>Contributors</span>
+			<span></span>
+		</div>
+		<div class="about-button">
+			<span class="button-ok button-cancel" aria-hidden="true">OK</span>
+		</div>
+	</div>
+	<div id="action-hover-toolset">
+		<a href="#" class="toolset-folder">
+			<span class="fa fa-basic fa-hover fa-folder-open" aria-hidden="true"></span>
+		</a>
+		<a href="#" class="toolset-edit">
+			<span class="fa fa-basic fa-hover fa-edit" aria-hidden="true"></span>
+		</a>
+		<a href="#" class="toolset-trashcan">
+			<span class="fa fa-basic fa-hover fa-trash" aria-hidden="true"></span>
+		</a>
+	</div>
+</body>
+</html>

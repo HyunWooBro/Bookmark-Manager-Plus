@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My Extension Options</title>
+	<link rel="stylesheet" href="lib/alertify/themes/alertify.core.css">
+	<link rel="stylesheet" href="lib/alertify/themes/alertify.default.css">
+	<link rel="stylesheet" href="css/switch.css">
+	<link rel="stylesheet" href="css/options.css">
+	<script src="lib/jquery/jquery-1.12.4.min.js"></script>
+	<script src="lib/jquery/jquery-ui.min.js"></script>
+	<script src="lib/alertify/alertify.js"></script>
+	<script src="js/constant.js"></script>
+	<script src="js/strings.js"></script>
+	<script src="js/util.js"></script>
+	<script src="js/options.js"></script>
+</head>
+<body>
+	<div>
+		<span>Badge Display</span>
+		<select id="badge-display-mode">
+			<option value="none">None</option>
+			<option value="domain">Same Domain Bookmark Count</option>
+			<option value="total">Total Bookmark Count</option>
+			<option value="today">Today Bookmark Count</option>
+		</select>
+	</div>
+	<br>
+	<div>
+		<span>Real-Time Apply</span>
+		<span id="real-time-apply-switch">
+			<div class="switch switch-round switch-off">
+				<div class="switch-toggle">
+				</div>
+			</div>
+		</span>
+	</div>
+	<br>
+	<div>
+		<span>Warning Count</span>
+		<input type="number" id="warning-count" step="100" min="100">
+	</div>
+	<br>
+	<div>
+		<button id="save">Save</button>
+		<button id="reset">Reset</button>
+	</div>
+</body>
+</html>
