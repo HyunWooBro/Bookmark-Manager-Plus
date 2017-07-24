@@ -143,6 +143,9 @@ if (!Array.prototype.remove) {
 
 if (!Array.prototype.findLast) {
 	Array.prototype.findLast = function ( callback ) {
+		if (!this.length) return undefined;
+		if (!callback) return this[this.length-1];
+  
 		for (var i = this.length - 1; i>-1; i--) {
 			if(callback(this[i])) return this[i];
 		}
@@ -151,6 +154,9 @@ if (!Array.prototype.findLast) {
 
 if (!Array.prototype.findLastIndex) {
 	Array.prototype.findLastIndex = function ( callback ) {
+		if (!this.length) return -1;
+		if (!callback) return this.length-1;
+		
 		for (var i = this.length - 1; i>-1; i--) {
 			if(callback(this[i])) return i;
 		}
